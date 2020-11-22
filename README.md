@@ -50,8 +50,10 @@
 * import & export mind data
     * private format
     * other minds' formats
-* save image
-* show & edit mind meta directly, in text area
+* save mind image
+* save data on exit, recover data on start
+* show & edit mind data directly, in text area
+* show & edit mind meta
 * WYSIWYG html node context
 * improve performance if needed
     * debounce

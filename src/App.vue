@@ -2,7 +2,6 @@
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
   <div id="header">
     <h1>Vue JSMind</h1>
-    <!-- <p>author:Qian |:kk4201@126.com</p> -->
   </div>
   <Mind msg="" />
 </template>

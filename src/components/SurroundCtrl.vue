@@ -83,6 +83,7 @@ export default {
 <style scoped>
 button:disabled {
     background: lightgray;
+    color: gray;
 }
 .ctrl {
     padding: 0;

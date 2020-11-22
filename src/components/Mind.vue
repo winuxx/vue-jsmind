@@ -8,7 +8,7 @@
         </div>
         <div class="mind-ctrl">
             <label class="editable">Editable<input type="checkbox" v-model="editable"></label>
-            <span>author:Qian |:kk4201@126.com</span>
+            <span>author: Qian | kk4201@126.com</span>
             <button class="recovery"
                 :disabled="recoverDisabled"
                 v-on:click="onRecoverClick"
@@ -25,12 +25,8 @@
 </template>
 
 <script>
-import jsMind from 'jsmind';
-import jsMindMap from 'jsmind';
-window.jsMind = jsMindMap;
-require('jsmind/js/jsmind.draggable.js');
-// import { debounce } from 'lodash';
 
+import JsMindApi from '@/common/jsmind-api';
 import SurroundCtrl from './SurroundCtrl.vue';
 
 export default {
@@ -43,6 +39,7 @@ export default {
     },
     data() {
         return {
+            jm: null,
             editable: true,
             recoverDisabled: true,
             scrollTop: 0,
@@ -59,26 +56,27 @@ export default {
     created() {
     },
     mounted() {
-        jmInit();
+        this.jm = new JsMindApi();
+        this.jm.init();
         window.addEventListener('scroll', this.onWindowScroll, true);
         window.onresize = this.onWindowResize;
     },
     methods: {
         onNodeSelected() {
             console.log('onNodeSelected');
-            let selectedNode = jm.get_selected_node();
+            let selectedNode = this.jm.getSelectedNode();
             // console.log('selectedNode:', selectedNode);
             if (!this.editable || !selectedNode) {
                 this.surroundCtrlData.visible = false;
                 return;
             }
-            let selectedElement = getSelectedElement();
+            let selectedElement = this.jm.getSelectedElement();
             // console.log('selectedElement:', selectedElement);
             if (selectedElement.getElementsByClassName('jsmind-editor').length > 0) {
                 this.surroundCtrlData.visible = false;
             }
             else {
-                let rect = getRect(selectedElement);
+                let rect = selectedElement.getBoundingClientRect();
                 this.surroundCtrlData.rect = rect;
                 this.surroundCtrlData.isRoot = (selectedNode.id == 'root');
                 this.surroundCtrlData.visible = true;
@@ -92,9 +90,9 @@ export default {
         },
         onCtrlLeft() {
             console.log('onCtrlLeft');
-            this.mindDataLast = jm.get_data().data;
+            this.mindDataLast = this.jm.getMindData();
             // console.log('mindDataLast:', this.mindDataLast);
-            removeSelectedNode(this.selectedNodeid);
+            this.jm.removeSelectedNode(this.selectedNodeid);
             // this.selectedNodeid should reset?
             this.surroundCtrlData.visible = false;
             this.recoverDisabled = false;
@@ -102,21 +100,21 @@ export default {
         onCtrlRight() {
             console.log('onCtrlRight');
             this.nodeid += 1;
-            addChildForSelectedNode(this.nodeid);
+            this.jm.addChildForSelectedNode(this.nodeid);
             this.recoverDisabled = true;
             this.onNodeSelected();
         },
         onCtrlTop() {
             console.log('onCtrlTop');
             this.nodeid += 1;
-            addNodeBeforeSelected(this.nodeid);
+            this.jm.addNodeBeforeSelected(this.nodeid);
             this.recoverDisabled = true;
             this.onNodeSelected();
         },
         onCtrlBottom() {
             console.log('onCtrlBottom');
             this.nodeid += 1;
-            addNodeAfterSelected(this.nodeid);
+            this.jm.addNodeAfterSelected(this.nodeid);
             this.recoverDisabled = true;
             this.onNodeSelected();
         },
@@ -128,8 +126,7 @@ export default {
             // console.log('scrollTop', this.scrollTop);
         },
         onWindowResize() {
-            let mindData = jm.get_data();
-            jm.show(mindData);
+            this.jm.reShow();
 
             // this.onNodeSelected();
             this.surroundCtrlData.visible = false;
@@ -139,8 +136,7 @@ export default {
             if (!this.mindDataLast.id) {
                 return;
             }
-            mind.data = this.mindDataLast;
-            jm.show(mind);
+            this.jm.show(this.mindDataLast);
             this.recoverDisabled = true;
             this.onNodeSelected();
         },
@@ -153,16 +149,16 @@ export default {
         editable: function(newval, oldval) {
             if (!newval && oldval) {
                 this.surroundCtrlData.visible = false;
-                jm.disable_edit();
+                this.jm.disableEdit();
                 return;
             }
-            jm.enable_edit();
+            this.jm.enableEdit();
             // 如果已经选中了node, 当editable从false变为true时, 显示ctrl
-            let selectedElement = getSelectedElement()
+            let selectedElement = this.jm.getSelectedElement()
             if (selectedElement === undefined) {
                 return;
             }
-            let rect = getRect(selectedElement);
+            let rect = selectedElement.getBoundingClientRect();
             this.surroundCtrlData.rect = rect;
             this.surroundCtrlData.visible = true;
         },
@@ -180,81 +176,6 @@ export default {
     },
 }
 
-let jm;
-
-let mind = {
-    /* 元数据，定义思维导图的名称、作者、版本等信息 */
-    "meta":{
-        "name":"Vue-jsMind",
-        "author":"kk4201@126.com",
-        "version":"0.1"
-    },
-    /* 数据格式声明 */
-    "format":"node_tree",
-    /* 数据内容 */
-    /* ID could be Symbol() */
-    "data":{"id":"root","topic":"new","children":[]}
-};
-let options = {
-    container:'jsmind_container',
-    editable: true,
-    mode: 'side',
-    theme:'primary'
-};
-
-function getAllNodes() {
-    let nodes = document.getElementsByTagName('jmnode');
-    console.log('nodes:', nodes);
-}
-
-function addChildForSelectedNode(nodeid) {
-    console.log('addChildForSelectedNode', nodeid);
-    let selectedNode = jm.get_selected_node();
-    let topic = 'new' + nodeid;
-    let data = {};
-    jm.add_node(selectedNode, String(nodeid), topic, data);
-    // getAllNodes(); //debug
-}
-
-function addNodeBeforeSelected(nodeid) {
-    console.log('addChildForSelectedNode', nodeid);
-    let selectedNode = jm.get_selected_node();
-    let topic = 'new' + nodeid;
-    let data = {};
-    jm.insert_node_before(selectedNode, String(nodeid), topic, data);
-}
-
-function addNodeAfterSelected(nodeid) {
-    console.log('addChildForSelectedNode', nodeid);
-    let selectedNode = jm.get_selected_node();
-    let topic = 'new' + nodeid;
-    let data = {};
-    jm.insert_node_after(selectedNode, String(nodeid), topic, data);
-}
-
-function removeSelectedNode(nodeid) {
-    console.log('removeSelectedNode');
-    jm.remove_node(nodeid);
-}
-
-function getSelectedElement() {
-    // should get it under jmnodes
-    let pNode = document.getElementsByTagName('jmnodes')[0];
-    let sNode = pNode.getElementsByClassName('selected')[0];
-    return sNode;
-}
-
-function getRect(element) {
-    let rect = element.getBoundingClientRect();
-    return rect;
-}
-
-function jmInit() {
-    jm = new jsMind(options);
-    jm.show(mind);
-
-    getAllNodes();
-}
 </script>
 
 // import style from jsmind module
