@@ -93,7 +93,7 @@ export default {
         onCtrlLeft() {
             console.log('onCtrlLeft');
             this.mindDataLast = jm.get_data().data;
-            console.log('mindDataLast:', this.mindDataLast);
+            // console.log('mindDataLast:', this.mindDataLast);
             removeSelectedNode(this.selectedNodeid);
             // this.selectedNodeid should reset?
             this.surroundCtrlData.visible = false;
@@ -121,7 +121,7 @@ export default {
             this.onNodeSelected();
         },
         onWindowScroll() {
-            console.log('handleWindowScroll');
+            console.log('onWindowScroll');
             this.scrollTop = document.documentElement.scrollTop ||
                 document.body.scrollTop ||
                 document.querySelector('.jsmind-inner').scrollTop;
