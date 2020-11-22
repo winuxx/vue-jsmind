@@ -2,7 +2,8 @@
 
 一个网页版的思维导图工具, 基于 Vue 和 Jsmind
 
-## screenshot
+## Screenshot
+
 ![avatar](screenshot-vue-jsmind.png)
 
 ## Start
