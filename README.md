@@ -1,6 +1,8 @@
-# vue-jsmind
+# Vue JsMind
 
 一个网页版的思维导图工具, 基于 Vue 和 Jsmind
+
+![avatar](screenshot-vue-jsmind.png)
 
 ## Start
 
@@ -15,10 +17,6 @@
 
 * ### Lints and fixes files
     npm run lint
-
-## Screenshot
-
-![avatar](screenshot-vue-jsmind.png)
 
 ## How to use
 
@@ -45,7 +43,7 @@
 * adaptive window
 * recover deleted node(s)
 
-### todo
+### Todo
 
 * import & export mind data
     * private format
@@ -56,6 +54,6 @@
 * improve performance if needed
     * debounce
 
-## about
+## About
 
-A web mind tool, based on Vue and Jsmind
+A web-based mind tool, based on Vue and Jsmind

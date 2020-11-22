@@ -8,7 +8,7 @@
         </div>
         <div class="mind-ctrl">
             <label class="editable">Editable<input type="checkbox" v-model="editable"></label>
-            <span>Author:Qian |:kk4201@126.com</span>
+            <span>author:Qian |:kk4201@126.com</span>
             <button class="recovery"
                 :disabled="recoverDisabled"
                 v-on:click="onRecoverClick"
