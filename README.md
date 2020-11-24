@@ -4,7 +4,7 @@
 
 ## Screenshot
 
-![avatar](screenshot-vue-jsmind.png)
+![avatar](screenshot.png)
 
 ## Start
 
@@ -47,10 +47,16 @@
 * recover deleted node(s)
 * import & export mind data
     * private format
+    * import method
+        * upload button
 
 ### Todo
 * import & export mind data
     * other minds' formats
+    * import method
+        * drag file to web page
+            * relace || merge
+                * if root node has children, confirm to replace
 * save mind image
 * save data on exit, recover data on start
 * show & edit mind data directly, in text area

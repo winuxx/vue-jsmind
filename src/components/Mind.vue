@@ -8,15 +8,26 @@
         </div>
         <div class="mind-ctrl">
             <div class="mind-ctrl-left">
-                <label class="editable">Editable<input type="checkbox" v-model="editable"></label>
+                <label class="editable"> Editable <input type="checkbox" v-model="editable"></label>
                 <button class="recovery"
                     :disabled="recoverDisabled"
                     v-on:click="onRecoverClick"
-                >Recover</button>
+                > Recover </button>
             </div>
             <span>author: Qian | kk4201@126.com</span>
             <div class="mind-ctrl-right">
+                <input type="file" id="import-browse-file" name="browseFile"
+                    accept="application/json"
+                    v-on:change="onImportFileChange"
+                    required
+                    style="display:none;"
+                />
+                <button class="import"
+                    :disabled="importDisabled"
+                    v-on:click="onImportClick"
+                > Import </button>
                 <button class="export"
+                    :disabled="exportDisabled"
                     v-on:click="onExportClick"
                 > Export </button>
             </div>
@@ -50,6 +61,8 @@ export default {
             jm: null,
             editable: true,
             recoverDisabled: true,
+            importDisabled: false,
+            exportDisabled: false,
             scrollTop: 0,
             surroundCtrlData: {
                 visible: false,
@@ -98,7 +111,7 @@ export default {
         },
         onCtrlLeft() {
             console.log('onCtrlLeft');
-            this.mindDataLast = this.jm.getMindData().data;
+            this.mindDataLast = this.jm.getMindData();
             // console.log('mindDataLast:', this.mindDataLast);
             this.jm.removeSelectedNode(this.selectedNodeid);
             // this.selectedNodeid should reset?
@@ -141,19 +154,35 @@ export default {
         },
         onRecoverClick() {
             console.log('onRecoverClick');
-            if (!this.mindDataLast.id) {
+            if (!this.mindDataLast.data.id) {
                 return;
             }
             this.jm.show(this.mindDataLast);
             this.recoverDisabled = true;
             this.onNodeSelected();
         },
-        onExportClick() {
+        async onImportClick() {
+            console.log('onImportClick');
+            this.importDisabled = true;
+            let browser = document.getElementById("import-browse-file");
+            browser.click();
+        },
+        async onImportFileChange (event) {
+            console.log('onImportFileChange');
+            let files = event.target.files;
+            let data = await utils.readFile(files);
+            this.jm.show(data);
+            this.importDisabled = false;
+        },
+        async onExportClick() {
             console.log('onExportClick');
+            this.exportDisabled = true;
             let data = this.jm.getMindData()
             let name = data.data.topic + '.json';
-            let url = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(JSON.stringify(data));
-            utils.download(name, url);
+            let href = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(JSON.stringify(data));
+            utils.download(name, href);
+            await utils.sleep(1000);
+            this.exportDisabled = false;
         },
     },
      unmounted () {
@@ -250,5 +279,11 @@ button:disabled {
 }
 .mind-ctrl-right {
     float: right;
+}
+.mind-ctrl-left > * {
+    margin-right: 0.5em;
+}
+.mind-ctrl-right > * {
+    margin-left: 0.5em;
 }
 </style>

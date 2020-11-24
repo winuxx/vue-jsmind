@@ -75,8 +75,7 @@ export class JsMindApi {
     }
 
     show(mindData) {
-        mind.data = mindData;
-        jm.show(mind);
+        jm.show(mindData);
 }
 
     reShow() {

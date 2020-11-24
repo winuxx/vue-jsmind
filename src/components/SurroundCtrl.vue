@@ -102,16 +102,16 @@ button:disabled {
     height: 36px;
 }
 .ctrl-left {
-    border-radius: 18px 0 0 18px;
+    border-radius: 50% 0 0 50%;
     background: orangered;
 }
 .ctrl-right {
-    border-radius: 0 18px 18px 0;
+    border-radius: 0 50% 50% 0;
 }
 .ctrl-top {
-    border-radius: 18px 18px 0 0;
+    border-radius: 50% 50% 0 0;
 }
 .ctrl-bottom {
-    border-radius: 0 0 18px 18px;
+    border-radius: 0 0 50% 50%;
 }
 </style>
