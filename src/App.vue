@@ -24,7 +24,7 @@ html {
   height: 100%;
 }
 body {
-  height: calc(100% - 60px);
+  height: calc(100% - 3rem);
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -32,11 +32,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  /* margin-top: 60px; */
   height: 100%;
 }
 #header {
-  /* height:4rem; */
+  height:3rem;
+  line-height: 1.5rem;
   /* z-index: 100; */
 }
 #header > h1 {
