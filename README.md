@@ -22,33 +22,34 @@
 
 ## How to use
 
-* Select Editable to enable editing
-* Click node then the controls will pop up
+* select Editable to enable editing
+* click node then the controls will pop up
     * 4 control buttons
         * remove node
         * add child node
         * add node before selected
         * add node after selected
-* drag and drop to move node
+* double click node to rename
+* drag and drop to move node(s)
 
 ## Mainly features
 
 * surround buttons for node control
-    * while selected roo node, will disable buttons except "add child"
+    * while selected root node, will disable buttons except "add child"
     * self-adaptive position
         * page scroll ✓
         * while renaming ✓
         * after renaming ✓
         * collapse and expand child nodes ✓
-        * when selected parent child ×
+        * when selected parent node, right ctrl will obscures the collapse button ×
 * draggable  (included from Jsmind)
 * adaptive window
 * recover deleted node(s)
-
-### Todo
-
 * import & export mind data
     * private format
+
+### Todo
+* import & export mind data
     * other minds' formats
 * save mind image
 * save data on exit, recover data on start

@@ -71,7 +71,7 @@ export class JsMindApi {
     }
 
     getMindData() {
-        return jm.get_data().data;
+        return jm.get_data();
     }
 
     show(mindData) {

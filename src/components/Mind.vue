@@ -7,12 +7,19 @@
         >
         </div>
         <div class="mind-ctrl">
-            <label class="editable">Editable<input type="checkbox" v-model="editable"></label>
+            <div class="mind-ctrl-left">
+                <label class="editable">Editable<input type="checkbox" v-model="editable"></label>
+                <button class="recovery"
+                    :disabled="recoverDisabled"
+                    v-on:click="onRecoverClick"
+                >Recover</button>
+            </div>
             <span>author: Qian | kk4201@126.com</span>
-            <button class="recovery"
-                :disabled="recoverDisabled"
-                v-on:click="onRecoverClick"
-             >Recover</button>
+            <div class="mind-ctrl-right">
+                <button class="export"
+                    v-on:click="onExportClick"
+                > Export </button>
+            </div>
         </div>
         <SurroundCtrl
             v-bind:visible="surroundCtrlData.visible"
@@ -26,6 +33,7 @@
 
 <script>
 
+import * as utils from '@/common/utils';
 import JsMindApi from '@/common/jsmind-api';
 import SurroundCtrl from './SurroundCtrl.vue';
 
@@ -90,7 +98,7 @@ export default {
         },
         onCtrlLeft() {
             console.log('onCtrlLeft');
-            this.mindDataLast = this.jm.getMindData();
+            this.mindDataLast = this.jm.getMindData().data;
             // console.log('mindDataLast:', this.mindDataLast);
             this.jm.removeSelectedNode(this.selectedNodeid);
             // this.selectedNodeid should reset?
@@ -140,6 +148,13 @@ export default {
             this.recoverDisabled = true;
             this.onNodeSelected();
         },
+        onExportClick() {
+            console.log('onExportClick');
+            let data = this.jm.getMindData()
+            let name = data.data.topic + '.json';
+            let url = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(JSON.stringify(data));
+            utils.download(name, url);
+        },
     },
      unmounted () {
         window.removeEventListener('scroll', this.onWindowScroll);
@@ -165,8 +180,7 @@ export default {
         scrollTop: async function(newval) {
             // console.log('scrillTop:', newval);
             this.surroundCtrlData.visible = false;
-            const delay = ms => new Promise(res => setTimeout(res, ms));
-            await delay(300);
+            await utils.sleep(300);
             if (newval == this.scrollTop) {
                 // scroll end
                 this.surroundCtrlData.visible = true;
@@ -216,15 +230,25 @@ jmnode:not(.root) {
 </style>
 
 <style scoped>
+button {
+    background: #33a1ff;
+    height: 1.5em;
+    border: none;
+    border-radius: 3px;
+}
+button:disabled {
+    background: lightgray;
+    color: gray;
+}
 .mind-ctrl {
     /* float: right; */
     margin-top: 0.6rem;
     /* margin-right: 0.5em; */
 }
-.editable {
+.mind-ctrl-left {
     float: left;
 }
-.recovery {
+.mind-ctrl-right {
     float: right;
 }
 </style>
