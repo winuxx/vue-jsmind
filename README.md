@@ -49,15 +49,15 @@
     * private format
     * import method
         * upload button
+* save mind image
 
 ### Todo
 * import & export mind data
     * other minds' formats
     * import method
         * drag file to web page
-            * relace || merge
-                * if root node has children, confirm to replace
-* save mind image
+    * replace || merge
+        * if root node has children, confirm to replace
 * save data on exit, recover data on start
 * show & edit mind data directly, in text area
 * show & edit mind meta

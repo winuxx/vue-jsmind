@@ -16,6 +16,10 @@
             </div>
             <span>author: Qian | kk4201@126.com</span>
             <div class="mind-ctrl-right">
+                <button class="screenshot"
+                    :disabled="screenshotDisabled"
+                    v-on:click="onScreenshotClick"
+                > Screenshot </button>
                 <input type="file" id="import-browse-file" name="browseFile"
                     accept="application/json"
                     v-on:change="onImportFileChange"
@@ -61,6 +65,7 @@ export default {
             jm: null,
             editable: true,
             recoverDisabled: true,
+            screenshotDisabled: false,
             importDisabled: false,
             exportDisabled: false,
             scrollTop: 0,
@@ -161,6 +166,13 @@ export default {
             this.recoverDisabled = true;
             this.onNodeSelected();
         },
+        async onScreenshotClick() {
+            console.log('onScreenshotClick');
+            this.screenshotDisabled = true;
+            this.jm.screenshot();
+            await utils.sleep(1000);
+            this.screenshotDisabled = false;
+        },
         async onImportClick() {
             console.log('onImportClick');
             this.importDisabled = true;
@@ -260,7 +272,8 @@ jmnode:not(.root) {
 
 <style scoped>
 button {
-    background: #33a1ff;
+    background: #3276b1;
+    color: #f8f8f8;
     height: 1.5em;
     border: none;
     border-radius: 3px;

@@ -2,6 +2,7 @@ import jsMind from 'jsmind';
 import jsMindMap from 'jsmind';
 window.jsMind = jsMindMap; // NOLINT
 require('jsmind/js/jsmind.draggable.js'); // NOLINT
+require('jsmind/js/jsmind.screenshot.js'); // NOLINT
 
 let jm;
 
@@ -89,6 +90,10 @@ export class JsMindApi {
 
     disableEdit() {
         jm.disable_edit();
+    }
+
+    screenshot() {
+        jm.screenshot.shootDownload();
     }
 
     init() {
