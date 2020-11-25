@@ -71,17 +71,21 @@ export class JsMindApi {
         return sNode;
     }
 
-    getMindData() {
+    getData() {
         return jm.get_data();
     }
 
-    show(mindData) {
-        jm.show(mindData);
+    setData(data) {
+        mind = data;
+    }
+
+    show(data) {
+        jm.show(data);
 }
 
     reShow() {
-        let mindData = jm.get_data();
-        jm.show(mindData);
+        let data = jm.get_data();
+        jm.show(data);
     }
 
     enableEdit() {

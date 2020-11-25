@@ -50,6 +50,7 @@
     * import method
         * upload button
 * save mind image
+* save data on exit, recover data on start
 
 ### Todo
 * import & export mind data
@@ -58,7 +59,6 @@
         * drag file to web page
     * replace || merge
         * if root node has children, confirm to replace
-* save data on exit, recover data on start
 * show & edit mind data directly, in text area
 * show & edit mind meta
 * WYSIWYG html node context

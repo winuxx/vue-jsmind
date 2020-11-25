@@ -84,8 +84,13 @@ export default {
     mounted() {
         this.jm = new JsMindApi();
         this.jm.init();
+        let mindData = localStorage.getItem('mindData');
+        if (mindData) {
+            this.jm.show(JSON.parse(mindData));
+        }
         window.addEventListener('scroll', this.onWindowScroll, true);
         window.onresize = this.onWindowResize;
+        window.addEventListener('beforeunload', this.onPageUnload, true);
     },
     methods: {
         onNodeSelected() {
@@ -116,7 +121,7 @@ export default {
         },
         onCtrlLeft() {
             console.log('onCtrlLeft');
-            this.mindDataLast = this.jm.getMindData();
+            this.mindDataLast = this.jm.getData();
             // console.log('mindDataLast:', this.mindDataLast);
             this.jm.removeSelectedNode(this.selectedNodeid);
             // this.selectedNodeid should reset?
@@ -143,19 +148,6 @@ export default {
             this.jm.addNodeAfterSelected(this.nodeid);
             this.recoverDisabled = true;
             this.onNodeSelected();
-        },
-        onWindowScroll() {
-            console.log('onWindowScroll');
-            this.scrollTop = document.documentElement.scrollTop ||
-                document.body.scrollTop ||
-                document.querySelector('.jsmind-inner').scrollTop;
-            // console.log('scrollTop', this.scrollTop);
-        },
-        onWindowResize() {
-            this.jm.reShow();
-
-            // this.onNodeSelected();
-            this.surroundCtrlData.visible = false;
         },
         onRecoverClick() {
             console.log('onRecoverClick');
@@ -189,12 +181,32 @@ export default {
         async onExportClick() {
             console.log('onExportClick');
             this.exportDisabled = true;
-            let data = this.jm.getMindData()
+            let data = this.jm.getData()
             let name = data.data.topic + '.json';
             let href = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(JSON.stringify(data));
             utils.download(name, href);
             await utils.sleep(1000);
             this.exportDisabled = false;
+        },
+        onWindowScroll() {
+            console.log('onWindowScroll');
+            this.scrollTop = document.documentElement.scrollTop ||
+                document.body.scrollTop ||
+                document.querySelector('.jsmind-inner').scrollTop;
+            // console.log('scrollTop', this.scrollTop);
+        },
+        onWindowResize() {
+            this.jm.reShow();
+
+            // this.onNodeSelected();
+            this.surroundCtrlData.visible = false;
+        },
+        onPageUnload() {
+            console.log('onPageUnload');
+            // Cancel the event as stated by the standard.
+            // event.preventDefault();
+            let mindData = this.jm.getData();
+            localStorage.setItem('mindData', JSON.stringify(mindData));
         },
     },
      unmounted () {
