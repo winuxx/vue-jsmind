@@ -170,13 +170,15 @@ export default {
             this.importDisabled = true;
             let browser = document.getElementById("import-browse-file");
             browser.click();
+            await utils.sleep(1000);
+            this.importDisabled = false;
         },
         async onImportFileChange (event) {
             console.log('onImportFileChange');
             let files = event.target.files;
             let data = await utils.readFile(files);
             this.jm.show(data);
-            this.importDisabled = false;
+            this.nodeid = 0;
         },
         async onExportClick() {
             console.log('onExportClick');

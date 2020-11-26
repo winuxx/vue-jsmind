@@ -38,25 +38,28 @@ export class JsMindApi {
     addChildForSelectedNode(nodeid) {
         console.log('addChildForSelectedNode', nodeid);
         let selectedNode = jm.get_selected_node();
+        let id = String(nodeid) + '-' + new Date().getTime();
         let topic = 'new' + nodeid;
         let data = {};
-        jm.add_node(selectedNode, String(nodeid), topic, data);
+        jm.add_node(selectedNode, id, topic, data);
     }
 
     addNodeBeforeSelected(nodeid) {
         console.log('addChildForSelectedNode', nodeid);
         let selectedNode = jm.get_selected_node();
+        let id = String(nodeid) + '-' + new Date().getTime();
         let topic = 'new' + nodeid;
         let data = {};
-        jm.insert_node_before(selectedNode, String(nodeid), topic, data);
+        jm.insert_node_before(selectedNode, id, topic, data);
     }
 
     addNodeAfterSelected(nodeid) {
         console.log('addChildForSelectedNode', nodeid);
         let selectedNode = jm.get_selected_node();
+        let id = String(nodeid) + '-' + new Date().getTime();
         let topic = 'new' + nodeid;
         let data = {};
-        jm.insert_node_after(selectedNode, String(nodeid), topic, data);
+        jm.insert_node_after(selectedNode, id, topic, data);
     }
 
     removeSelectedNode(nodeid) {
