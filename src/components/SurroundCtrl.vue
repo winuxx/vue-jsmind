@@ -1,5 +1,5 @@
 <template>
-    <div class="surround" v-show=visible>
+    <div id="surround-ctrl" v-show=visible>
         <button class="ctrl ctrl-vertical ctrl-left"
             :disabled=isRoot
             v-on:click=$parent.onCtrlLeft()
@@ -68,7 +68,7 @@ export default {
     },
     watch: {
         rect: function(val) {
-            // console.log('val:', val);
+            // console.log('rect:', val);
             this.ctrlPosition.left = [val.left - 24, val.top + val.height/2 - 18];
             this.ctrlPosition.right = [val.right, val.top + val.height/2 - 18];
             this.ctrlPosition.top = [val.left + val.width/2 -18, val.top - 24];

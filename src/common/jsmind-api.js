@@ -20,7 +20,7 @@ let mind = {
     "data":{"id":"root","topic":"new","children":[]}
 };
 let options = {
-    container:'jsmind_container',
+    container:'jsmind-container',
     editable: true,
     mode: 'side',
     theme:'primary'
@@ -84,7 +84,7 @@ export class JsMindApi {
 
     show(data) {
         jm.show(data);
-}
+    }
 
     reShow() {
         let data = jm.get_data();
@@ -101,6 +101,10 @@ export class JsMindApi {
 
     screenshot() {
         jm.screenshot.shootDownload();
+    }
+
+    setTheme(theme) {
+        jm.set_theme(theme);
     }
 
     init() {

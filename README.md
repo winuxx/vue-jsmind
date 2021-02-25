@@ -51,6 +51,10 @@
         * upload button
 * save mind image
 * save data on exit, recover data on start
+* font config
+    * sans, serif, mono
+* theme setting
+    * jsmind theme
 
 ### Todo
 * import & export mind data
@@ -62,6 +66,8 @@
 * show & edit mind data directly, in text area
 * show & edit mind meta
 * WYSIWYG html node context
+* theme setting
+    * global (page / ctrl) theme
 * improve performance if needed
     * debounce
 

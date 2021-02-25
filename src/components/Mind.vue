@@ -1,10 +1,12 @@
 <template>
     <div id="js-mind">
         <span>{{msg}}</span>
-        <div id="jsmind_container"
+        <div id="jsmind-container"
             v-on:click="onNodeSelected"
             v-on:dblclick="onNodeDbClick"
+            v-bind:style="{'--fontSelected': fontSelected}"
         >
+        <!-- '--fontSelected' should bind to one of the ancestors of <jmnode> -->
         </div>
         <div class="mind-ctrl">
             <div class="mind-ctrl-left">
@@ -14,7 +16,22 @@
                     v-on:click="onRecoverClick"
                 > Recover </button>
             </div>
-            <span>author: Qian | kk4201@126.com</span>
+            <span>
+                Theme:
+                <select v-model="themeSelected">
+                    <option v-for="themeOption in themeOptions" v-bind:key="themeOption.value">
+                        {{ themeOption.text }}
+                    </option>
+                </select>
+            </span>
+            <span>
+                Font:
+                <select v-model="fontSelected">
+                    <option v-for="fontOption in fontOptions" v-bind:key="fontOption.text">
+                        {{ fontOption.value }}
+                    </option>
+                </select>
+            </span>
             <div class="mind-ctrl-right">
                 <button class="screenshot"
                     :disabled="screenshotDisabled"
@@ -43,6 +60,12 @@
         >
             <!-- <template v-slot:ctrl-left><b> X </b></template> -->
         </SurroundCtrl>
+        <TextEditor
+            v-bind:visible="textEditorData.visible"
+            v-bind:rect="textEditorData.rect"
+            v-bind:value="textEditorData.value"
+        >
+        </TextEditor>
     </div>
 </template>
 
@@ -51,11 +74,13 @@
 import * as utils from '@/common/utils';
 import JsMindApi from '@/common/jsmind-api';
 import SurroundCtrl from './SurroundCtrl.vue';
+import TextEditor from './TextEditor';
 
 export default {
     name: 'Mind',
     components: {
-        SurroundCtrl
+        SurroundCtrl,
+        TextEditor
     },
     props: {
         msg: String
@@ -74,9 +99,27 @@ export default {
                 isRoot: Boolean,
                 rect: {},
             },
+            textEditorData: {
+                visible: false,
+                rect: {},
+                value: '',
+            },
             nodeid: 0,
             selectedNodeid: Number,
             mindDataLast: Object,
+            themeOptions: [
+                { text: 'primary', value: 'primary' },
+                { text: 'warning', value: 'warning' },
+                { text: 'danger', value: 'danger' },
+                { text: 'success', value: 'success' },
+            ],
+            themeSelected: 'primary',
+            fontOptions: [
+                {text: 'sans', value: 'Sans-serif'},
+                {text: 'serif', value: 'Serif'},
+                {text: 'mono', value: 'Monospace'},
+            ],
+            fontSelected: 'Sans-serif',
         }
     },
     created() {
@@ -99,6 +142,7 @@ export default {
             // console.log('selectedNode:', selectedNode);
             if (!this.editable || !selectedNode) {
                 this.surroundCtrlData.visible = false;
+                this.textEditorData.visible = false;
                 return;
             }
             let selectedElement = this.jm.getSelectedElement();
@@ -117,7 +161,15 @@ export default {
         },
         onNodeDbClick() {
             console.log('onDbClick');
+            let selectedElement = this.jm.getSelectedElement();
+            let rect = selectedElement.getBoundingClientRect();
+            let selectedNode = this.jm.getSelectedNode();
+            let value = selectedNode.topic;
             this.surroundCtrlData.visible = false;
+            // todo: the current TextEditor is not suitable, will write one.
+            // this.textEditorData.visible = true;
+            this.textEditorData.rect = rect;
+            this.textEditorData.value = value;
         },
         onCtrlLeft() {
             console.log('onCtrlLeft');
@@ -232,16 +284,23 @@ export default {
             this.surroundCtrlData.rect = rect;
             this.surroundCtrlData.visible = true;
         },
-        scrollTop: async function(newval) {
-            // console.log('scrillTop:', newval);
+        scrollTop: async function(val) {
+            // console.log('scrillTop:', val);
             this.surroundCtrlData.visible = false;
             await utils.sleep(300);
-            if (newval == this.scrollTop) {
+            if (val == this.scrollTop) {
                 // scroll end
                 this.surroundCtrlData.visible = true;
                 this.onNodeSelected();
             }
-        }
+        },
+        themeSelected: function(val) {
+            console.log('theme selected:', val);
+            this.jm.setTheme(val);
+        },
+        fontSelected: function(val) {
+            console.log('font selected:', val);
+        },
     },
 }
 
@@ -254,6 +313,9 @@ export default {
 // extra style for jsmind
 // this style should not be scoped
 <style>
+jmnode {
+    font-family: var(--fontSelected) !important;
+}
 jmnode:not(.root) {
     /* max-width: 200px; */
     white-space: pre-wrap;
@@ -267,7 +329,7 @@ jmnode:not(.root) {
 #js-mind{
     height: calc(100% - 3.2rem);
 }
-#jsmind_container {
+#jsmind-container {
     background: #f0f8ff;
     /* width: 100%; */
     /* height: 100%; */
@@ -295,6 +357,14 @@ button {
 button:disabled {
     background: lightgray;
     color: gray;
+}
+select {
+    background: #3276b1;
+    color: #f8f8f8;
+    height: 1.5em;
+    border: none;
+    border-radius: 3px;
+    appearance: unset;
 }
 .mind-ctrl {
     /* float: right; */
